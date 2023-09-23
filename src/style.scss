@@ -58,7 +58,7 @@
             }
 
             button {
-                background-color: white;
+                background-color: #8da4f1;
                 color: white;
                 padding: 10px;
                 font-weight: bold;
@@ -229,6 +229,18 @@
                 img {
                     height: 24px;
                     cursor: pointer;
+                }
+
+                .ctrl__buttons {
+                    background: none;
+                    fill: 0;
+                    flex-grow: 1;
+                    // display: block;
+                    // flex-direction: row;
+                    height: 24px;
+                    // width:100%;
+                    /* min-height: 0; */
+                    // padding: 8px;
                 }
             }
 
