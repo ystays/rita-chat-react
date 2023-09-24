@@ -22,7 +22,7 @@ const Chat = () => {
                         </button>
                         <button class="mdc-button mdc-button--raised" disable id="connectBtn">
                             <i class="material-icons mdc-button__icon" aria-hidden="true">group</i>
-                            <span class="mdc-button__label">Start call</span>
+                            <span class="mdc-button__label">Start chat</span>
                         </button>
                         <button class="mdc-button mdc-button--raised" disabled id="hangupBtn">
                             <i class="material-icons mdc-button__icon" aria-hidden="true">close</i>
