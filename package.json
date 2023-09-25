@@ -14,10 +14,12 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
     "sass": "^1.68.0",
+    "uuid": "^9.0.1",
     "web-vitals": "^3.4.0"
   },
   "devDependencies": {
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "@babel/plugin-proposal-private-property-in-object": ""
   },
   "scripts": {
     "start": "react-scripts start",
