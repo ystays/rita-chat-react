@@ -8,10 +8,14 @@ import {
 } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 import { useContext } from 'react'
+import { io } from 'socket.io-client';
 
 function App() {
 
     const {currentUser} = useContext(AuthContext);
+
+    const URL = "https://rita-chat-react-6198aaa528f8.herokuapp.com/"
+    const socket = io.connect(URL)
 
     const ProtectedRoute = ({children}) => {
         if (!currentUser) {
@@ -27,7 +31,9 @@ function App() {
                 <Route path="/">
                     <Route index element={
                         <ProtectedRoute>
-                            <Home />
+                            <Home 
+                                socket={socket}    
+                            />
                         </ProtectedRoute>} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />

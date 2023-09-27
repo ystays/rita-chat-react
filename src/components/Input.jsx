@@ -5,17 +5,34 @@ import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
 import { arrayUnion, doc, serverTimestamp, updateDoc, Timestamp } from 'firebase/firestore';
 import { v4 as uuid } from "uuid";
-import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase';
 
-const Input = () => {
+const Input = ({ inputToChat }) => {
     const [text, setText] = useState("");
     const [img, setImg] = useState(null);
 
     const { currentUser} = useContext(AuthContext);
     const { data } = useContext(ChatContext);
 
+    const handleSendRTC = () => {
+        if (!text) {
+            return console.log("Please input some text.");
+        }
+        if (img) {
+            // Send image
+        } else {
+            inputToChat({
+                id: uuid(),
+                text,
+                senderId: currentUser.uid,
+                date: Timestamp.now(),
+            })
+        }
+    }
+
     const handleSend = async () => {
+
         if (img) {
             const storageRef = ref(storage, uuid());
 
@@ -78,7 +95,7 @@ const Input = () => {
                 <label htmlFor='file'>
                     <img src={Img} alt='' />    
                 </label> 
-                <button onClick={handleSend}>Send</button>
+                <button onClick={handleSendRTC}>Send</button>
             </div>    
         </div>
 
