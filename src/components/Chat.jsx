@@ -23,6 +23,8 @@ const Chat = ({ socket }) => {
 
     const inputToChat = (data) => {
         setInput(data);
+        console.log("received input from Input component");
+        channel.send(data)
     }
 
     // Default configuration - Change these if you have a different STUN or TURN server.
@@ -77,20 +79,20 @@ const Chat = ({ socket }) => {
 
         // Create the data channel and establish its event listeners
         setChannel(peerConnection.createDataChannel("sendChannel"));
-        setChannel.onopen = handleSendChannelStatusChange;
-        setChannel.onclose = handleSendChannelStatusChange;
+        channel.onopen = handleSendChannelStatusChange;
+        channel.onclose = handleSendChannelStatusChange;
 
         function handleSendChannelStatusChange(event) {
-            if (sendChannel) {
-              var state = sendChannel.readyState;
+            if (channel) {
+              var state = channel.readyState;
             
               if (state === "open") {
-                sendButton.disabled = false;
-                messageInputBox.disabled = false;
-                messageInputBox.focus();
+                // sendButton.disabled = false;
+                // messageInputBox.disabled = false;
+                // messageInputBox.focus();
               } else {
                 //messageInputBox.disabled = true;
-                sendButton.disabled = true;
+                // sendButton.disabled = true;
               }
             }
         }
@@ -142,10 +144,102 @@ const Chat = ({ socket }) => {
     }
 
     const handleConnect = async () => {
+        return}
+    //     // enable hangup, disable ready button
 
-    }
+    //     console.log('Create PeerConnection with configuration: ', configuration);
+    //     peerConnection = new RTCPeerConnection(configuration);
 
-    const handleHangup = async () => {
+    //     registerPeerConnectionListeners();
+
+    //     peerConnection.ondatachannel = receiveChannelCallback;
+    //     function receiveChannelCallback(event) {
+    //         receiveChannel = event.channel;
+    //         receiveChannel.onopen = handleReceiveChannelStatusChange;
+    //         receiveChannel.onclose = handleReceiveChannelStatusChange;
+
+    //         receiveChannel.onmessage = handleReceiveMessage;
+    //     }
+
+    //     // Handle onmessage events for the receiving channel.
+    //     // These are the data messages sent by the sending channel.
+        
+    //     function handleReceiveMessage(event) {
+    //         console.log(event)
+    //         // display message as Message component
+    //     }
+
+    //     function handleReceiveChannelStatusChange(event) {
+    //         if (receiveChannel) {
+    //         console.log("Receive channel's status has changed to " +
+    //                     receiveChannel.readyState);
+    //         }
+            
+    //         // Here you would do stuff that needs to be done
+    //         // when the channel's status changes.
+    //     }
+
+    //     // TODO: when remote description received from signaling server
+    //     socket.on("rtc_offer", async (data) => {
+    //         if (!peerConnection.currentRemoteDescription && data.offer) {
+    //         console.log('Got offer - set remote description: ', data.offer);
+    //         const ans = new RTCSessionDescription(data.offer);
+    //         await peerConnection.setRemoteDescription(ans);
+    //         }
+
+    //         // setup for recipient end of call
+    //         // set up the ICE candidates
+    //         peerConnection.onicecandidate = evt => {
+    //         console.log("received ice candidate (recipient) ", evt);
+    //         if (evt.candidate) {
+    //             socket.emit("new_ice_candidate", evt.candidate);
+    //         }
+    //         };
+
+    //         socket.on("new_ice_candidate", (evt) => {
+    //         try {
+    //             console.log("candidate on recipient end: ", evt)
+    //         } catch (e) {
+    //             console.log(e)
+    //         }
+    //         if (evt) {
+    //             peerConnection.addIceCandidate(new RTCIceCandidate(evt))
+    //             .catch((e) => console.log("add ICE candidate failed ", e))
+    //         } else {
+    //             console.log("no e.candidate");
+    //         }
+    //         })
+
+
+    //         // create SDP answer
+    //         const answer = await peerConnection.createAnswer();
+    //         console.log('Created answer - set local description:', answer);
+    //         await peerConnection.setLocalDescription(answer);
+
+    //         const roomWithAnswer = {
+    //         answer: {
+    //             type: answer.type,
+    //             sdp: answer.sdp,
+    //         },
+    //         };
+
+    //         socket.emit("rtc_answer", roomWithAnswer);
+    //     })
+    // }
+
+    const handleHangup = async () => {        
+          if (peerConnection) {
+            peerConnection.close();
+          }
+        
+          //document.querySelector('#joinBtn').disabled = true;
+          //document.querySelector('#createBtn').disabled = true;
+          document.querySelector('#hangupBtn').disabled = true;
+          document.querySelector('#currentRoom').innerText = '';
+        
+          //TODO: Delete room on hangup
+        
+          document.location.reload(true);
 
     }
 
