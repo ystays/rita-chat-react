@@ -14,7 +14,8 @@ function App() {
 
     const {currentUser} = useContext(AuthContext);
 
-    const URL = "https://rita-chat-react-6198aaa528f8.herokuapp.com/"
+    // const URL = "https://rita-chat-react-6198aaa528f8.herokuapp.com/"
+    const URL = "http://localhost:4000"; // server URL
     const socket = io.connect(URL)
 
     const ProtectedRoute = ({children}) => {
