@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef, useEffect, useCallback } from 'react';
 // import Video from "../img/video.png";
 // import Add from "../img/add_person.png";
 // import More from "../img/more.png";
@@ -18,8 +18,8 @@ const Chat = ({ socket }) => {
     let peerConnection = null;
     // const [socket, setSocket] = useState(null);
 
-    // const [channel, setChannel] = useState(null);
-    let channel = null;
+    let channel = useRef(null);
+    // let channel = null;
 
     const [input, setInput] = useState({});
     const [disabledHangup, setDisabledHangup] = useState(true);
@@ -28,7 +28,12 @@ const Chat = ({ socket }) => {
     const inputToChat = (data) => {
         setInput(data);
         console.log("received input from Input component");
-        channel.send(data)
+        if (channel) {
+            channel.send(data);
+        }
+        else {
+            console.log("channel is null, input: ", data.text);
+        }
     }
 
     // Default configuration - Change these if you have a different STUN or TURN server.
@@ -80,7 +85,9 @@ const Chat = ({ socket }) => {
 
         peerConnection.ondatachannel = channelCallback;
         function channelCallback(event) {
-            channel = event.channel;
+            let ch = event.channel;
+            channel = ch;
+            // setChannel(ch);
             channel.onopen = handlechannelStatusChange;
             channel.onclose = handlechannelStatusChange;
 
@@ -97,8 +104,8 @@ const Chat = ({ socket }) => {
 
         function handlechannelStatusChange(event) {
             if (channel) {
-            console.log("Receive channel's status has changed to " +
-                        channel.readyState);
+                console.log("Receive channel's status has changed to " +
+                            channel.readyState);
             }
             
             // Here you would do stuff that needs to be done
@@ -170,12 +177,16 @@ const Chat = ({ socket }) => {
         registerPeerConnectionListeners();
 
         // Create the data channel and establish its event listeners
-        channel = peerConnection.createDataChannel("datachannel");
+        const ch = peerConnection.createDataChannel("datachannel");
+        channel = ch;
+        console.log(channel);
         channel.onopen = handleSendChannelStatusChange;
         channel.onclose = handleSendChannelStatusChange;
 
         function handleSendChannelStatusChange(event) {
-            if (channel) {
+            if (channel) {                
+                console.log("Send channel's status has changed to " +
+                    channel.readyState);
               var state = channel.readyState;
             
               if (state === "open") {
@@ -240,9 +251,7 @@ const Chat = ({ socket }) => {
         if (peerConnection) {
             peerConnection.close();
         }
-    
-        //document.querySelector('#joinBtn').disabled = true;
-        //document.querySelector('#createBtn').disabled = true;
+
         setDisabledHangup(true);
         // document.querySelector('#currentRoom').innerText = '';
         //TODO: Delete room on hangup
