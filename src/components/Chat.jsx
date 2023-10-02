@@ -29,7 +29,8 @@ const Chat = ({ socket }) => {
         setInput(data);
         console.log("received input from Input component");
         if (channel) {
-            channel.send(data);
+            console.log(channel.current);
+            channel.current.send(data.text);
         }
         else {
             console.log("channel is null, input: ", data.text);
@@ -86,17 +87,16 @@ const Chat = ({ socket }) => {
         peerConnection.ondatachannel = channelCallback;
         function channelCallback(event) {
             let ch = event.channel;
-            channel = ch;
+            channel.current = ch;
             // setChannel(ch);
-            channel.onopen = handlechannelStatusChange;
-            channel.onclose = handlechannelStatusChange;
+            channel.current.onopen = handlechannelStatusChange;
+            channel.current.onclose = handlechannelStatusChange;
 
-            channel.onmessage = handleReceiveMessage;
+            channel.current.onmessage = handleReceiveMessage;
         }
 
         // Handle onmessage events for the receiving channel.
-        // These are the data messages sent by the sending channel.
-        
+        // These are the data messages sent by the sending channel.        
         function handleReceiveMessage(event) {
             console.log(event)
             // display message as Message component
@@ -105,7 +105,7 @@ const Chat = ({ socket }) => {
         function handlechannelStatusChange(event) {
             if (channel) {
                 console.log("Receive channel's status has changed to " +
-                            channel.readyState);
+                            channel.current.readyState);
             }
             
             // Here you would do stuff that needs to be done
@@ -178,16 +178,25 @@ const Chat = ({ socket }) => {
 
         // Create the data channel and establish its event listeners
         const ch = peerConnection.createDataChannel("datachannel");
-        channel = ch;
-        console.log(channel);
-        channel.onopen = handleSendChannelStatusChange;
-        channel.onclose = handleSendChannelStatusChange;
+        channel.current = ch;
+        console.log("channel: ", channel);
+        channel.current.onopen = handleSendChannelStatusChange;
+        channel.current.onclose = handleSendChannelStatusChange;
+
+        channel.current.onmessage = handleReceiveMessage;
+
+        // Handle onmessage events for the receiving channel.
+        // These are the data messages sent by the sending channel.        
+        function handleReceiveMessage(event) {
+            console.log(event)
+            // display message as Message component
+        }
 
         function handleSendChannelStatusChange(event) {
             if (channel) {                
                 console.log("Send channel's status has changed to " +
-                    channel.readyState);
-              var state = channel.readyState;
+                    channel.current.readyState);
+              var state = channel.current.readyState;
             
               if (state === "open") {
                 // sendButton.disabled = false;
@@ -200,7 +209,7 @@ const Chat = ({ socket }) => {
             }
         }
 
-          // Create an offer
+        // Create an offer
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);
         console.log('Created offer: ', offer);
@@ -230,7 +239,7 @@ const Chat = ({ socket }) => {
             peerConnection.onicecandidate = evt => {
                 console.log("received ice candidate (offerer)", evt);
                 if (evt.candidate) {
-                socket.emit("new_ice_candidate", evt.candidate);
+                    socket.emit("new_ice_candidate", evt.candidate);
                 }
             };
         
