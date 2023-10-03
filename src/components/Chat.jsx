@@ -14,12 +14,9 @@ const Chat = ({ socket }) => {
     const { currentUser } = useContext(AuthContext);
     const { data } = useContext(ChatContext);
 
-    // const [peerConnection, setPeerConnection] = useState(null);
     let peerConnection = null;
-    // const [socket, setSocket] = useState(null);
 
     let channel = useRef(null);
-    // let channel = null;
 
     const [input, setInput] = useState({});
     const [disabledHangup, setDisabledHangup] = useState(true);
@@ -29,12 +26,19 @@ const Chat = ({ socket }) => {
         setInput(data);
         console.log("received input from Input component");
         if (channel) {
-            console.log(channel.current);
+            console.log(channel.current);           
             channel.current.send(data.text);
         }
         else {
             console.log("channel is null, input: ", data.text);
         }
+    }
+
+
+    const [msg, setMsg] = useState('');
+  
+    const chatToMsg = () => {
+      setMsg(" Testing... ");
     }
 
     // Default configuration - Change these if you have a different STUN or TURN server.
@@ -190,6 +194,8 @@ const Chat = ({ socket }) => {
         function handleReceiveMessage(event) {
             console.log(event)
             // display message as Message component
+            // TODO
+
         }
 
         function handleSendChannelStatusChange(event) {
@@ -262,20 +268,19 @@ const Chat = ({ socket }) => {
         }
 
         setDisabledHangup(true);
-        // document.querySelector('#currentRoom').innerText = '';
         //TODO: Delete room on hangup
     
         document.location.reload(true);
     }
 
     const handleVideoCall = async () => {
-
+        return;
     }
     const handleAddPerson = async () => {
-
+        return;
     }
     const handleMore = async () => {
-
+        return;
     }
 
     return ( 
@@ -288,26 +293,20 @@ const Chat = ({ socket }) => {
                     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></link>
                     <div id="buttons" className="ctrl__buttons">
                         <button onClick={handleReady} className="mdc-button mdc-button--raised" id="readyBtn">
-                            {/* <i className="material-icons mdc-button__icon" aria-hidden="true">phone_enabled</i> */}
                             <i className="material-icons mdc-button__icon" aria-hidden="true">call</i>
-                            {/* <span className="mdc-button__label">Go online</span> */}
                         </button>
                         <button onClick={handleConnect} className="mdc-button mdc-button--raised" disabled = {disabledConnect} id="connectBtn">
                             <i className="material-icons mdc-button__icon" aria-hidden="true">connect_without_contact</i>
-                            {/* <span className="mdc-button__label">Start chat</span> */}
                         </button>
                         <button onClick={handleHangup} className="mdc-button mdc-button--raised" disabled={disabledHangup} id="hangupBtn">
                             <i className="material-icons mdc-button__icon" aria-hidden="true">call_end</i>
-                            {/* <span className="mdc-button__label">Hangup</span> */}
                         </button>
                         <button onClick={handleVideoCall} className="mdc-button mdc-button--raised" disabled id="videoCallBtn">
                             <i className="material-icons mdc-button__icon" aria-hidden="true">video_call</i>
-                            {/* <span className="mdc-button__label">Video call</span> */}
                         </button>
                         {/* <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" /> */}
                         <button onClick={handleAddPerson} className="mdc-button mdc-button--raised" disabled id="addPersonBtn">
                             <i className="material-icons mdc-button__icon" aria-hidden="true">person_add</i>
-                            {/* <span className="mdc-button__label"></span> */}
                         </button>
                         <button onClick={handleMore} className="mdc-button mdc-button--raised" disabled id="MoreBtn">
                             <i className="material-icons mdc-button__icon" aria-hidden="true">more_horiz</i>
@@ -320,7 +319,7 @@ const Chat = ({ socket }) => {
                     <img src={More} alt='' /> */}
                 </div>
             </div>
-                <Messages />
+                <Messages chatToMsg={msg}/>
                 <Input inputToChat={inputToChat}/>
         </div>
     )
