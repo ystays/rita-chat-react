@@ -2,6 +2,9 @@
   "name": "rita-chat",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "21.x"
+  },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.1",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
