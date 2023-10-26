@@ -22,24 +22,20 @@ const Chat = ({ socket }) => {
     const [disabledHangup, setDisabledHangup] = useState(true);
     const [disabledConnect, setDisabledConnect] = useState(false);
 
+    // receive input from Input component
     const inputToChat = (data) => {
         setInput(data);
-        console.log("received input from Input component");
+        setMsg(JSON.stringify(data));
         if (channel) {
-            console.log(channel.current);           
-            channel.current.send(data.text);
+            console.log(data);           
+            channel.current.send(JSON.stringify(data));
         }
         else {
             console.log("channel is null, input: ", data.text);
         }
     }
 
-
     const [msg, setMsg] = useState('');
-  
-    const chatToMsg = () => {
-      setMsg(" Testing... ");
-    }
 
     // Default configuration - Change these if you have a different STUN or TURN server.
     const configuration = {
@@ -102,7 +98,8 @@ const Chat = ({ socket }) => {
         // Handle onmessage events for the receiving channel.
         // These are the data messages sent by the sending channel.        
         function handleReceiveMessage(event) {
-            console.log(event)
+            console.log(event.data)
+            setMsg(event.data)
             // display message as Message component
         }
 
@@ -313,10 +310,6 @@ const Chat = ({ socket }) => {
                             {/* <span className="mdc-button__label">More</span> */}
                         </button>
                     </div>
-
-                    {/* <img src={Video} alt='' />
-                    <img src={Add} alt='' />
-                    <img src={More} alt='' /> */}
                 </div>
             </div>
                 <Messages chatToMsg={msg}/>
